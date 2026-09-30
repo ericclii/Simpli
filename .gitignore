@@ -1,0 +1,9 @@
+keys/*.pem
+keys/*.raw
+dist/
+build/
+*.xcuserdatad
+.build/
+.swiftpm/
+node_modules/
+.DS_Store

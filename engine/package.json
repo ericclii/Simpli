@@ -1,0 +1,17 @@
+{
+  "name": "@noscroll/engine",
+  "version": "0.1.0",
+  "description": "NoScroll blocking engine — injected into each service's own mobile web app by the iOS shell.",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "main": "dist/noscroll.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.2"
+  }
+}

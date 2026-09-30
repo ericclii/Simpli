@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "minEngine": 1,
+  "services": {
+    "linkedin": {
+      "match": [
+        "*://*.linkedin.com/*"
+      ],
+      "authAllowList": [
+        "^/login",
+        "^/uas/",
+        "^/checkpoint/",
+        "^/signup"
+      ],
+      "surfaces": {
+        "video-tab": {
+          "kind": "route-block",
+          "label": "Block the video feed",
+          "patterns": [
+            "^/video",
+            "^/feed/video"
+          ],
+          "redirect": "/feed/",
+          "defaultEnabled": true
+        },
+        "video-nav": {
+          "kind": "dom-remove",
+          "label": "Remove the Video tab",
+          "selectors": [
+            "a[href^='/video']",
+            "a[data-test-app-aware-link][href*='/video/']"
+          ],
+          "defaultEnabled": true,
+          "afterRemove": "rejustify"
+        },
+        "feed": {
+          "kind": "dom-remove",
+          "label": "Block Feed",
+          "selectors": [
+            "main [data-id^='urn:li:activity']"
+          ],
+          "onlyOnRoutes": [
+            "^/feed"
+          ],
+          "defaultEnabled": false
+        },
+        "grayscale": {
+          "kind": "style",
+          "label": "Grayscale",
+          "css": "html { filter: grayscale(1) !important; }"
+        }
+      }
+    }
+  },
+  "signature": "2E1kYsG73pWAkPNrO7oj3qUw1Pn7e9rsjbgx9k1qeOcohR0OVR/RoJqzRcvz5ulRv4Ru7Ikx2wzALu4wHv9RDg=="
+}

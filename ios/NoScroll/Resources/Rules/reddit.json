@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "minEngine": 1,
+  "services": {
+    "reddit": {
+      "match": [
+        "*://*.reddit.com/*"
+      ],
+      "authAllowList": [
+        "^/login",
+        "^/register",
+        "^/account/"
+      ],
+      "surfaces": {
+        "popular": {
+          "kind": "route-block",
+          "label": "Block Popular & All",
+          "patterns": [
+            "^/r/popular",
+            "^/r/all",
+            "^/best"
+          ],
+          "redirect": "/",
+          "defaultEnabled": true
+        },
+        "home-feed": {
+          "kind": "dom-remove",
+          "label": "Block the home feed",
+          "selectors": [
+            "shreddit-feed",
+            "div[data-testid='posts-list']"
+          ],
+          "onlyOnRoutes": [
+            "^/$",
+            "^/\\?"
+          ],
+          "defaultEnabled": false
+        },
+        "video-feed": {
+          "kind": "dom-remove",
+          "label": "Block the video feed",
+          "selectors": [
+            "shreddit-player",
+            "a[href*='/media?']"
+          ],
+          "defaultEnabled": true
+        },
+        "promoted": {
+          "kind": "dom-remove",
+          "label": "Hide promoted posts",
+          "selectors": [
+            "shreddit-post[promoted]",
+            "shreddit-ad-post"
+          ],
+          "defaultEnabled": true,
+          "source": "seeded from BevizLaszlo/UBlock-Filters-for-Social-Media (MIT)"
+        },
+        "grayscale": {
+          "kind": "style",
+          "label": "Grayscale",
+          "css": "html { filter: grayscale(1) !important; }"
+        }
+      }
+    }
+  },
+  "signature": "o8leXN/MeCU/JtHH5oURBCMrFOVUSQCJZaOTgO6fgOgZp4HVHBZHwr7jT6OtPNJce7SP8La2RKi8zNl75olfCw=="
+}

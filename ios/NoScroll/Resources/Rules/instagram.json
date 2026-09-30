@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "minEngine": 1,
+  "services": {
+    "instagram": {
+      "match": [
+        "*://*.instagram.com/*"
+      ],
+      "authAllowList": [
+        "^/accounts/",
+        "^/challenge/",
+        "^/oauth/",
+        "^/emailsignup"
+      ],
+      "surfaces": {
+        "reels-tab-slot": {
+          "kind": "dom-remove",
+          "label": "Block Reels",
+          "selectors": [
+            "div:has(> div a[href='/']) > div:not(:has(article)):not(:has(a[href='/'])):not(:has(a[href^='/direct/inbox'])):has(a[href^='/reels'])"
+          ],
+          "suppression": "hide",
+          "source": "Hides the whole bottom-bar slot so the remaining tabs re-space and Messages lands in the centre. Slots differ in depth (Messages sits a level deeper than Home), so the slot is matched structurally: a child of the row that holds no post, no Home link and no Messages link.",
+          "defaultEnabled": true
+        },
+        "reels-tab": {
+          "kind": "dom-remove",
+          "label": "Block Reels",
+          "selectors": [
+            "nav a[href^='/reels']",
+            "[role='tablist'] a[href^='/reels']",
+            "[role='navigation'] a[href^='/reels']",
+            "div[role='menuitem'] a[href^='/reels']",
+            "div:has(> div a[href='/']) > div:not(:has(article)):not(:has(a[href='/'])):not(:has(a[href^='/direct/inbox'])) a[href^='/reels']"
+          ],
+          "afterRemove": "rejustify",
+          "defaultEnabled": true,
+          "suppression": "hide",
+          "source": "Scoped to navigation. An unscoped a[href^='/reels'] also matched the audio link inside feed posts; removing those React-owned nodes crashed Instagram's feed and threw the user back to the top."
+        },
+        "reels-route": {
+          "kind": "route-block",
+          "label": "Block Reels",
+          "patterns": [
+            "^/reels(/|$)",
+            "^/reels/audio/",
+            "^/reels/video/"
+          ],
+          "redirect": "/",
+          "defaultEnabled": true
+        },
+        "reels-tray": {
+          "kind": "dom-remove",
+          "label": "Block Reels tray in feed",
+          "selectors": [
+            "main section:not(:has(article)):has(a[href^='/reels/']:not([href^='/reels/audio']))",
+            "article:has(a[href^='/reels/'][role='link']:not([href^='/reels/audio']))"
+          ],
+          "defaultEnabled": true,
+          "suppression": "hide",
+          "source": "Scoped to <main> and to sections without posts: the whole page sits inside a <section>, so an unscoped section:has(/reels/ link) could hide everything."
+        },
+        "explore-route": {
+          "kind": "route-block",
+          "label": "Block Explore",
+          "patterns": [
+            "^/explore/(?!search(/|$|\\?)|$|\\?)"
+          ],
+          "redirect": "/",
+          "defaultEnabled": true,
+          "source": "/explore/ itself stays reachable: it holds Instagram's search box, and its search overlay's Cancel returns there. Its recommendation grid is hidden by the iOS shell (instagramExploreJS). Everything else under /explore/ except search (tags, locations) still goes home. An earlier version rewrote /explore/ to /explore/search/, which trapped the user: that page draws its list over the bottom bar, and Cancel led back to /explore/ and so back into search."
+        },
+        "suggested-posts": {
+          "kind": "dom-remove",
+          "defaultEnabled": true,
+          "label": "Hide Ads & Suggested",
+          "selectors": [
+            "article:has([aria-label='Suggested for you'])",
+            "article:has([aria-label*='Suggested'])",
+            "article:has(div[role='button'][aria-label*='Why am I seeing'])"
+          ],
+          "suppression": "hide",
+          "source": "seeded from BevizLaszlo/UBlock-Filters-for-Social-Media (MIT)"
+        },
+        "sponsored": {
+          "kind": "dom-remove",
+          "defaultEnabled": true,
+          "label": "Hide sponsored posts",
+          "selectors": [
+            "article:has(a[href*='facebook.com/ads/ig_redirect'])",
+            "article:has(a[href*='utm_source'])",
+            "article:has([data-ad-preview])"
+          ],
+          "suppression": "hide",
+          "source": "Ads in the home feed carry a link to facebook.com/ads/ig_redirect (Meta's ad-click tracker); no organic post does. Verified on a live feed 2026-09-29: 6 of 32 posts were ads, all matched, none of the others. The older utm_source / data-ad-preview selectors matched nothing and are kept only as fallbacks."
+        },
+        "stories-tray": {
+          "kind": "dom-remove",
+          "defaultEnabled": false,
+          "label": "Block Stories",
+          "selectors": [
+            "main [role='menu']:has(canvas)",
+            "main > div > div:first-child:has(canvas + img)"
+          ],
+          "suppression": "hide"
+        },
+        "stories-route": {
+          "kind": "route-block",
+          "defaultEnabled": false,
+          "label": "Block Stories",
+          "patterns": [
+            "^/stories/"
+          ],
+          "redirect": "/"
+        },
+        "saved-posts": {
+          "kind": "route-block",
+          "defaultEnabled": false,
+          "label": "Block Saved Posts",
+          "patterns": [
+            "^/[^/]+/saved(/|$)"
+          ],
+          "redirect": "/"
+        },
+        "feed": {
+          "kind": "dom-remove",
+          "defaultEnabled": false,
+          "label": "Block Feed",
+          "selectors": [
+            "main article"
+          ],
+          "onlyOnRoutes": [
+            "^/$"
+          ],
+          "suppression": "hide"
+        },
+        "dms-only": {
+          "kind": "route-allow-only",
+          "defaultEnabled": false,
+          "label": "DMs Only",
+          "redirect": "/direct/inbox/",
+          "allow": [
+            "^/direct/",
+            "^/p/",
+            "^/reel/"
+          ]
+        },
+        "grayscale": {
+          "kind": "style",
+          "defaultEnabled": false,
+          "label": "Grayscale",
+          "css": "html { filter: grayscale(1) !important; }"
+        },
+        "isolated-player": {
+          "kind": "isolate-shell",
+          "label": "One video at a time",
+          "defaultEnabled": true,
+          "source": "Handled by the iOS shell (instagramReelLockJS), which locks vertical scrolling on a reel or post. The engine ignores this kind; the surface exists so its switch shows in Settings."
+        }
+      }
+    }
+  },
+  "signature": "lTBmkPDZDfrRNT/p2eMl0x32EcIUJsAJUeNPH0VZbNGlxKVKaV7Oom4lNKL0AM6zBOmCYCKQXg+XX2kXT1xAAw=="
+}

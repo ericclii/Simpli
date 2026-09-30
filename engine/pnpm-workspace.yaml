@@ -1,0 +1,16 @@
+# pnpm settings for the engine package.
+#
+# pnpm 10 and later refuse to run a dependency's install script unless it is
+# approved here. esbuild is the only one that needs it: its postinstall links
+# the platform-native binary. Both keys are needed because pnpm versions read
+# different ones (onlyBuiltDependencies: 10.5+; allowBuilds: 11 and late 10.x).
+# The `packages` entry keeps older pnpm from rejecting the file.
+
+packages:
+  - '.'
+
+onlyBuiltDependencies:
+  - esbuild
+
+allowBuilds:
+  esbuild: true
