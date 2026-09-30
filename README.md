@@ -9,13 +9,82 @@ small engine that hides or redirects the endless surfaces: Reels, Shorts,
 Explore, suggested posts and ads. It keeps messages, the people you follow,
 and posting. A reel sent in a DM plays on its own; you can't scroll to the next.
 
-Also: several accounts per service, a Screen Time page with daily usage,
-a home-screen widget, light and dark appearance, and YouTube picture in picture
-(automatic from fullscreen, or from the floating menu).
+<p align="center">
+  <img src="docs/screenshots/home-dark.png" width="19%" alt="Home screen, dark">
+  <img src="docs/screenshots/home-light.png" width="19%" alt="Home screen, light">
+  <img src="docs/screenshots/screen-time.png" width="19%" alt="Screen Time">
+  <img src="docs/screenshots/blocking-settings.png" width="19%" alt="Instagram blocking settings">
+  <img src="docs/screenshots/accounts.png" width="19%" alt="Account switcher">
+</p>
+
+## Changes from NoScroll
+
+### Native Liquid Glass interface
+Built in SwiftUI with iOS 26's Liquid Glass: the system tab bar, glass buttons,
+and a floating glass menu that stretches and splits into Home, Refresh and
+Picture in Picture. Sites run up under the status bar behind a soft scroll edge.
+Earlier iOS versions get a material fallback.
+
+### Visual improvements
+One rounded type family and a quiet neutral palette throughout, a home screen
+built around a carousel of app icons, and a System / Light / Dark setting that
+applies to Instagram and YouTube too.
+
+### Screen Time analytics
+Time spent in each app, counted while it's open and kept only on the device.
+A stacked weekly chart covers this week and last, with a daily average that
+skips days you didn't open the app. Tap an app to see only its time; days roll
+over at 4 AM, so late nights count toward the day before.
+
+### Multiple account support
+Several accounts per service, each with its own sign-in kept in a separate
+website data store. Switch from above the app icon; swipe one away to sign it
+out on the device.
+
+### Picture in Picture
+YouTube keeps playing in Picture in Picture when you leave the app from
+fullscreen, and the floating menu starts or ends it from the normal player.
+
+### Ad blocking
+Instagram ads and sponsored posts are hidden in the feed again: NoScroll's ad
+selectors no longer matched anything. Ads are now recognised by the link to
+Meta's ad-click tracker that every ad carries and no normal post does. YouTube
+ads are not blocked.
+
+### Updated blocking logic
+- **Instagram:** the home feed ends at "You're all caught up" instead of running
+  on into suggested posts. Explore is no longer blocked outright, so its search
+  box works, while its recommendation grid stays hidden. The "Use the app"
+  banner is hidden, and the Reels tab's slot is removed rather than left empty.
+  A reel or post opened from a DM is locked to that one item by stopping
+  vertical scrolling only, so taps and carousel swipes still work.
+- **YouTube:** the "Open App" button is removed.
+
+### Improved blocking engine
+The injected engine is cut down to what the app uses: no telemetry, rule-health
+probes, gesture isolation or test hooks, down from 8.0 KB to 4.8 KB. Rules
+remain signed data that the app verifies before anything is injected, and the
+engine never touches sign-in pages.
+
+### Decluttering
+The Android app, Screen Time shielding, sleep mode, onboarding and CI tooling
+are gone. Settings fold away for apps you hide from the home screen, and each
+screen shows only what it needs.
+
+### Bug fixes
+- Instagram's feed no longer jumps back to the top while blocking runs.
+- Tapping or swiping a carousel in a reel opened from a DM no longer throws you
+  back to the chat.
+- Instagram search works, and Explore no longer flashes before it's hidden.
+- Every service opens its own site: NoScroll sent the six besides Instagram and
+  YouTube to Instagram. A service's window also can't be left on another
+  service's site, and Instagram and YouTube reopen on their home page.
+- The Instagram message bar stays above the keyboard.
 
 ## Layout
 
 ```
+docs/screenshots/        the images in this README
 ios/NoScroll/            the app (SwiftUI shell + WKWebView wrapper)
   App/                   state, services, web screen, floating menu
   Home/                  home screen, settings, account switcher
@@ -64,19 +133,6 @@ signed-in username for the account switcher.
 (`cd engine && pnpm install && pnpm build`, then copy `engine/dist/noscroll.js`
 into `ios/NoScroll/Resources/`). Its source is kept here because the AGPL
 requires shipping it with the app.
-
-## Changes from NoScroll
-
-- iOS only: the Android app, Screen Time shielding, sleep mode, onboarding, CI
-  and the live probe harness are removed.
-- A new SwiftUI shell: home carousel with per-service accounts, settings,
-  Screen Time usage, floating glass menu, appearance setting.
-- Instagram scripts: feed ends at "You're all caught up", DM reels and single
-  posts are locked, the Explore grid is hidden under search, the app banner is
-  hidden, and the username is read for the account switcher.
-- YouTube picture in picture.
-- The engine is trimmed to what the app uses (no telemetry, rule-health probes,
-  isolation gestures or test hooks), and the rules are re-signed with a new key.
 
 ## Licence
 
