@@ -10,11 +10,10 @@ Explore, suggested posts and ads. It keeps messages, the people you follow,
 and posting. A reel sent in a DM plays on its own; you can't scroll to the next.
 
 <p align="center">
-  <img src="docs/screenshots/home-dark.png" width="19%" alt="Home screen, dark">
-  <img src="docs/screenshots/home-light.png" width="19%" alt="Home screen, light">
-  <img src="docs/screenshots/screen-time.png" width="19%" alt="Screen Time">
-  <img src="docs/screenshots/blocking-settings.png" width="19%" alt="Instagram blocking settings">
-  <img src="docs/screenshots/accounts.png" width="19%" alt="Account switcher">
+  <img src="docs/screenshots/home-dark.png" width="24%" alt="Home screen, dark">
+  <img src="docs/screenshots/home-light.png" width="24%" alt="Home screen, light">
+  <img src="docs/screenshots/screen-time.png" width="24%" alt="Screen Time">
+  <img src="docs/screenshots/accounts.png" width="24%" alt="Account switcher">
 </p>
 
 ## Changes from NoScroll
@@ -27,8 +26,8 @@ Earlier iOS versions get a material fallback.
 
 ### Visual improvements
 One rounded type family and a quiet neutral palette throughout, a home screen
-built around a carousel of app icons, and a System / Light / Dark setting that
-applies to Instagram and YouTube too.
+built around a carousel of app icons, and a light/dark toggle (following the
+iPhone's setting until you choose) that applies to Instagram and YouTube too.
 
 ### Screen Time analytics
 Time spent in each app, counted while it's open and kept only on the device.

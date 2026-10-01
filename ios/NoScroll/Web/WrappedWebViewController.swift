@@ -752,6 +752,23 @@ extension WrappedWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel); return
         }
 
+        // A link out of the site goes through the service's redirector
+        // (l.instagram.com/?u=…), a blank page that forwards on. Followed here
+        // it would load that blank page in place and leave it on screen once
+        // the destination opens in Safari, so the destination is read from it
+        // and the current page is never left.
+        if navigationAction.targetFrame?.isMainFrame ?? true,
+           let destination = Self.linkShimDestination(url) {
+            if isTrustedHost(destination.host) {
+                decisionHandler(.cancel)
+                webView.load(URLRequest(url: destination))
+            } else {
+                openExternally(destination)
+                decisionHandler(.cancel)
+            }
+            return
+        }
+
         // There is no address bar, so a page loaded here is indistinguishable
         // from the real service: a DM'd link to a fake login page would be a
         // perfect phish. Only first-party hosts may load as the top-level page;
@@ -763,10 +780,30 @@ extension WrappedWebViewController: WKNavigationDelegate {
            ["http", "https"].contains(url.scheme?.lowercased() ?? ""),
            !isTrustedHost(url.host) {
             openExternally(url)
-            decisionHandler(.cancel); return
+            decisionHandler(.cancel)
+            // If a redirector page already loaded to get here, don't leave it
+            // blank on screen: go back to the page the link was on.
+            if let current = webView.url, Self.linkShimHosts.contains(current.host?.lowercased() ?? ""),
+               webView.canGoBack {
+                webView.goBack()
+            }
+            return
         }
 
         decisionHandler(.allow)
+    }
+
+    /// The services' outbound-link redirectors; the destination is in `u`.
+    private static let linkShimHosts: Set<String> = ["l.instagram.com", "l.facebook.com", "lm.facebook.com"]
+
+    private static func linkShimDestination(_ url: URL) -> URL? {
+        guard linkShimHosts.contains(url.host?.lowercased() ?? ""),
+              let target = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                .queryItems?.first(where: { $0.name == "u" })?.value,
+              let destination = URL(string: target),
+              ["http", "https"].contains(destination.scheme?.lowercased() ?? "")
+        else { return nil }
+        return destination
     }
 
     /// True for this service's own sites (see AppState.serviceDomains).

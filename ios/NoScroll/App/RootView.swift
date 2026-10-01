@@ -9,7 +9,7 @@ struct NoScrollApp: App {
         // The home carousel's page dots: the default white vanishes on the
         // light background, so they take the text colours instead.
         UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(light: 0x141414, dark: 0xF3EEE4)
-        UIPageControl.appearance().pageIndicatorTintColor = UIColor(light: 0xC7C7CC, dark: 0x57544E)
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor(light: 0xAEAEB2, dark: 0x57544E)
     }
 
     var body: some Scene {

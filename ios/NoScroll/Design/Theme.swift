@@ -14,7 +14,9 @@ enum Theme {
     /// Rows and cards sitting on `paper`.
     static let card = Color(light: 0xFFFFFF, dark: 0x24221F)
     static let ink = Color(light: 0x141414, dark: 0xF3EEE4)
-    static let inkSoft = Color(light: 0x8E8E93, dark: 0x9C978A)
+    /// Secondary text. By day, darker than iOS's usual secondary grey, which
+    /// reads at under 3:1 on `paper`; this passes 4.5:1 while staying grey.
+    static let inkSoft = Color(light: 0x6C6C70, dark: 0x9C978A)
 
     /// Chart colours, one per service in a fixed order (the order of
     /// AppState.services), so an app keeps its colour whatever else is shown.

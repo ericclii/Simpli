@@ -1,35 +1,19 @@
 import Charts
 import SwiftUI
 
-/// The app's settings: appearance, then every service's switches in one
-/// place, rather than one sheet at a time.
+/// The app's settings: every service's switches in one place, rather than
+/// one sheet at a time.
 struct AllSettingsTab: View {
     @EnvironmentObject private var state: AppState
-    @AppStorage(Appearance.storageKey) private var appearance = Appearance.initial
+    /// A beta app waiting on the warning before it is shown on the home screen.
+    @State private var betaToShow: AppState.Service?
 
     var body: some View {
         NavigationStack {
             List {
-                Section {
-                    Picker("Appearance", selection: $appearance) {
-                        ForEach(Appearance.allCases) { Text($0.title).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
-                } header: {
-                    EyebrowHeader("Appearance")
-                } footer: {
-                    Text("Applies to the whole app, including Instagram and YouTube. System follows your iPhone's setting.")
-                        .footnoteStyle()
-                }
-
                 ForEach(AppState.services) { service in
                     Section {
-                        // Animated so the app's other switches unfold and fold
-                        // away as it is shown or hidden.
-                        Toggle("Show on home screen",
-                               isOn: state.showOnHome(service.id).animation(.snappy))
+                        Toggle("Show on home screen", isOn: showOnHome(service))
                             .tint(Theme.switchOn)
                         // A hidden app's blocking switches are hidden too;
                         // they keep their values for when it is shown again.
@@ -52,18 +36,43 @@ struct AllSettingsTab: View {
             }
             .themedList()
             .toolbar(.hidden, for: .navigationBar)
+            .alert("Warning!", isPresented: Binding(get: { betaToShow != nil },
+                                                    set: { if !$0 { betaToShow = nil } }),
+                   presenting: betaToShow) { service in
+                Button("Cancel", role: .cancel) {}
+                Button("Proceed") {
+                    withAnimation(.snappy) { state.showOnHome(service.id).wrappedValue = true }
+                }
+            } message: { _ in
+                Text("This app is still in BETA, and is not fully supported: it may not be fully functional, and there may be visual glitches. Do you wish to proceed?")
+            }
         }
+    }
+
+    /// Animated so the app's other switches unfold and fold away as it is
+    /// shown or hidden. Turning on a beta app asks first; the switch stays off
+    /// unless the warning is accepted.
+    private func showOnHome(_ service: AppState.Service) -> Binding<Bool> {
+        let shown = state.showOnHome(service.id)
+        return Binding(
+            get: { shown.wrappedValue },
+            set: { newValue in
+                if newValue, service.beta {
+                    betaToShow = service
+                } else {
+                    withAnimation(.snappy) { shown.wrappedValue = newValue }
+                }
+            }
+        )
     }
 }
 
-/// The app's colour scheme: follow iOS, or always light or dark.
-enum Appearance: String, CaseIterable, Identifiable {
+/// The app's colour scheme: follows iOS until the home screen's toggle picks
+/// light or dark.
+enum Appearance: String {
     case system, light, dark
 
     static let storageKey = "noscroll.appearance"
-
-    var id: String { rawValue }
-    var title: String { rawValue.capitalized }
 
     /// nil means "follow the system".
     var colorScheme: ColorScheme? {

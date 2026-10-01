@@ -2,7 +2,8 @@ import SwiftUI
 
 /// The home screen: one service at a time in a horizontal carousel, with today's
 /// usage above it and a small button for that service's blocking settings
-/// below. Nothing else: no title, no shortcuts, no banners.
+/// below, plus a light/dark toggle and a coffee link along the top. Nothing
+/// else: no title, no shortcuts, no banners.
 ///
 /// One service per page rather than a grid, because the grid invites browsing —
 /// and an app about not browsing should open onto a decision, not a menu.
@@ -13,6 +14,11 @@ struct HomeView: View {
     @State private var openService: AppState.Service?
     @State private var showSettingsFor: AppState.Service?
     @State private var showAccountsFor: AppState.Service?
+    @AppStorage(Appearance.storageKey) private var appearance = Appearance.initial
+    @Environment(\.colorScheme) private var colorScheme
+    /// Where the light/dark toggle is on screen: the theme change spreads
+    /// out from its centre.
+    @State private var toggleFrame = CGRect.zero
 
     var body: some View {
         VStack(spacing: 0) {
@@ -27,6 +33,12 @@ struct HomeView: View {
             }
 
             Spacer(minLength: 0)
+        }
+        // Over the content, so the centred carousel doesn't move.
+        .overlay(alignment: .top) {
+            topButtons
+                .padding(.horizontal, 32)
+                .padding(.top, 8)
         }
         .background(Theme.paper.ignoresSafeArea())
         .fullScreenCover(item: $openService) { WebScreen(service: $0) }
@@ -52,6 +64,34 @@ struct HomeView: View {
     }
 
     // MARK: - Pieces
+
+    /// Light/dark on the left, the coffee link on the right, each the size of
+    /// the web screens' floating ☰ button.
+    private var topButtons: some View {
+        HStack {
+            Button {
+                Haptics.tap()
+                let next: Appearance = colorScheme == .dark ? .light : .dark
+                ThemeTransition.run(from: CGPoint(x: toggleFrame.midX, y: toggleFrame.midY)) {
+                    appearance = next
+                }
+            } label: {
+                GlassCircleIcon(systemName: colorScheme == .dark ? "moon.fill" : "sun.max.fill")
+                    .contentTransition(.symbolEffect(.replace))
+            }
+            .buttonStyle(.plain)
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { toggleFrame = $0 }
+            .accessibilityLabel(colorScheme == .dark ? "Dark mode. Switch to light" : "Light mode. Switch to dark")
+
+            Spacer()
+
+            Link(destination: URL(string: "https://buymeacoffee.com/ericli")!) {
+                GlassCircleIcon(systemName: "cup.and.saucer.fill")
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Buy me a coffee")
+        }
+    }
 
     private var usage: some View {
         VStack(spacing: 2) {
@@ -293,6 +333,101 @@ private struct GlassCapsuleButton: ViewModifier {
                 .buttonStyle(.bordered)
                 .buttonBorderShape(.capsule)
                 .controlSize(.large)
+        }
+    }
+}
+
+/// An icon in a 52-point glass circle, matching the web screens' floating
+/// ☰ button: Liquid Glass on iOS 26+, a material circle before that.
+private struct GlassCircleIcon: View {
+    let systemName: String
+
+    var body: some View {
+        let icon = Image(systemName: systemName)
+            .font(.system(size: 20, weight: .semibold))
+            .foregroundStyle(Theme.ink)
+            .frame(width: 52, height: 52)
+            .contentShape(Circle())
+        if #available(iOS 26.0, *) {
+            icon.glassEffect(.regular.interactive(), in: Circle())
+        } else {
+            icon
+                .background(.regularMaterial, in: Circle())
+                .shadow(color: .black.opacity(0.12), radius: 10, y: 4)
+        }
+    }
+}
+
+/// Changes the app's light/dark theme with the new one spreading out in a
+/// circle from a point (the toggle), rather than switching in one frame.
+///
+/// A snapshot of the window as it is now is laid over everything, the theme
+/// is switched underneath it, and a hole in the snapshot grows from the point
+/// until it uncovers the whole screen. The status bar isn't in the snapshot,
+/// so it changes at the start. With Reduce Motion on, the themes crossfade.
+@MainActor
+enum ThemeTransition {
+    static func run(from point: CGPoint, change: @escaping () -> Void) {
+        guard let window = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap(\.windows)
+                .first(where: \.isKeyWindow),
+              !UIAccessibility.isReduceMotionEnabled,
+              let snapshot = window.snapshotView(afterScreenUpdates: false)
+        else {
+            crossfade(change)
+            return
+        }
+
+        // On top of everything; it also takes any taps until it's gone.
+        snapshot.frame = window.bounds
+        window.addSubview(snapshot)
+
+        // Switch underneath, unanimated, so the hole shows the finished theme.
+        var instant = Transaction()
+        instant.disablesAnimations = true
+        withTransaction(instant) { change() }
+
+        let bounds = window.bounds
+        let corners = [CGPoint(x: bounds.minX, y: bounds.minY), CGPoint(x: bounds.maxX, y: bounds.minY),
+                       CGPoint(x: bounds.minX, y: bounds.maxY), CGPoint(x: bounds.maxX, y: bounds.maxY)]
+        let radius = corners.map { hypot($0.x - point.x, $0.y - point.y) }.max() ?? 0
+
+        /// The whole snapshot minus a circle: even-odd fill leaves the circle
+        /// as a hole.
+        func shown(minus circleRadius: CGFloat) -> CGPath {
+            let path = UIBezierPath(rect: bounds)
+            path.append(UIBezierPath(arcCenter: point, radius: circleRadius,
+                                     startAngle: 0, endAngle: 2 * .pi, clockwise: true))
+            return path.cgPath
+        }
+
+        let mask = CAShapeLayer()
+        mask.fillRule = .evenOdd
+        mask.path = shown(minus: radius)
+        snapshot.layer.mask = mask
+
+        let grow = CABasicAnimation(keyPath: "path")
+        grow.fromValue = shown(minus: 0)
+        grow.toValue = mask.path
+        grow.duration = 0.45
+        grow.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        CATransaction.begin()
+        CATransaction.setCompletionBlock { snapshot.removeFromSuperview() }
+        mask.add(grow, forKey: "grow")
+        CATransaction.commit()
+    }
+
+    private static func crossfade(_ change: @escaping () -> Void) {
+        guard let window = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap(\.windows)
+                .first(where: \.isKeyWindow) else {
+            change()
+            return
+        }
+        UIView.transition(with: window, duration: 0.25, options: .transitionCrossDissolve) {
+            change()
         }
     }
 }
