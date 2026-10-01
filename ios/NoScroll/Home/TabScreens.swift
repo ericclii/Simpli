@@ -25,10 +25,19 @@ struct AllSettingsTab: View {
                             }
                         }
                     } header: {
-                        EyebrowHeader(title: service.beta ? "\(service.name) · beta" : service.name) {
-                            BrandMark(service: service.id, size: 13)
-                                .padding(4)
-                                .background(service.gradient, in: RoundedRectangle(cornerRadius: 6))
+                        VStack(alignment: .leading, spacing: 18) {
+                            if service.id == AppState.services.first?.id {
+                                Text("Settings")
+                                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                                    .foregroundStyle(Theme.ink)
+                                    .textCase(nil)
+                                    .accessibilityAddTraits(.isHeader)
+                            }
+                            EyebrowHeader(title: service.beta ? "\(service.name) · beta" : service.name) {
+                                BrandMark(service: service.id, size: 13)
+                                    .padding(4)
+                                    .background(service.gradient, in: RoundedRectangle(cornerRadius: 6))
+                            }
                         }
                     }
                     .listRowBackground(Theme.card)
