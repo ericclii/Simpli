@@ -1,8 +1,8 @@
 # Simpli
 
-Instagram and YouTube without short-form video, on iPhone. A modified version
-of [NoScroll](https://github.com/Blueturboguy07/noscroll) (AGPL-3.0), changed
-from it in 2026 (see [Changes from NoScroll](#changes-from-noscroll)).
+Instagram and YouTube without short-form video, on iPhone. Originally built on top
+of [NoScroll](https://github.com/Blueturboguy07/noscroll) (AGPL-3.0), forked
+from NoScroll in 2026 (see [Changes from NoScroll](#changes-from-noscroll)).
 
 The app loads each service's mobile website in a `WKWebView` and injects a
 small engine that hides or redirects the endless surfaces: Reels, Shorts,
