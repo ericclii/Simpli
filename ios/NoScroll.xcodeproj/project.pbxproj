@@ -34,6 +34,7 @@
 		D83AB944B5F8E0296DC5253D /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F101DA5C9C1BF120AFC3D3D /* Theme.swift */; };
 		DC66C7088500AC1FB21DACFC /* ServiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9142C103B350A4F42060B98 /* ServiceSettingsView.swift */; };
 		E3D2C8740D06E02BD6ABD35D /* TabScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3625EA0C0613FDC22D64C5DC /* TabScreens.swift */; };
+		612BD7A42F9C28CDC50E4C64 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4FCEFD7F500E592911CF8C19 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -90,6 +91,7 @@
 		F80B5AA7285EE89404D034D8 /* WrappedWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WrappedWebViewController.swift; path = NoScroll/Web/WrappedWebViewController.swift; sourceTree = "<group>"; };
 		FBF257999FE8034997CE0C5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = NoScrollWidget/Info.plist; sourceTree = "<group>"; };
 		FE79E075B3369855BA9631CA /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Services.swift; path = NoScroll/App/Services.swift; sourceTree = "<group>"; };
+		4FCEFD7F500E592911CF8C19 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = NoScroll/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				847708244D2F2364D2D98223 /* Assets.xcassets */,
+				4FCEFD7F500E592911CF8C19 /* PrivacyInfo.xcprivacy */,
 				D2E4B2A875DB71820FEEF62C /* noscroll.js */,
 				F448BA98B41A3C469FBAA0C0 /* rules-signing.pub.raw */,
 				6DD636EB38F7FB6347CF8CEC /* facebook.json */,
@@ -258,6 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BBA0F12CFE98E6B7CEE26F4 /* Assets.xcassets in Resources */,
+				612BD7A42F9C28CDC50E4C64 /* PrivacyInfo.xcprivacy in Resources */,
 				0020A065EE1971D8D94E8A44 /* noscroll.js in Resources */,
 				73A4DAFBEDD5F44B73C51FBA /* rules-signing.pub.raw in Resources */,
 				2F54E958873733761E2D57DE /* facebook.json in Resources */,
@@ -327,11 +331,11 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Instagram uses your microphone when you record video inside Simpli.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Choose photos to upload inside Simpli.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ericli.Simpli;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -389,12 +393,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NoScrollWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Simpli;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ericli.Simpli.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -451,12 +455,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NoScrollWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Simpli;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ericli.Simpli.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -473,11 +477,11 @@
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Instagram uses your microphone when you record video inside Simpli.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Choose photos to upload inside Simpli.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ericli.Simpli;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
