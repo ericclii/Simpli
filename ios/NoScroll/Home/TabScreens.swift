@@ -76,26 +76,25 @@ struct AllSettingsTab: View {
     }
 }
 
-/// The app's colour scheme: follows iOS until the home screen's toggle picks
-/// light or dark.
+/// The app's colour scheme: dark until the home screen's toggle picks light.
+/// A stored "system" (from the old appearance picker) no longer decodes, so it
+/// falls back to the default and opens dark too.
 enum Appearance: String {
-    case system, light, dark
+    case light, dark
 
     static let storageKey = "noscroll.appearance"
 
-    /// nil means "follow the system".
-    var colorScheme: ColorScheme? {
+    var colorScheme: ColorScheme {
         switch self {
-        case .system: nil
         case .light: .light
         case .dark: .dark
         }
     }
 
     /// Used until a choice is stored: carries over the earlier light-mode
-    /// switch if it was ever set, otherwise follows the system.
+    /// switch if it was ever set, otherwise dark.
     static var initial: Appearance {
-        guard let light = UserDefaults.standard.object(forKey: "noscroll.lightMode") as? Bool else { return .system }
+        guard let light = UserDefaults.standard.object(forKey: "noscroll.lightMode") as? Bool else { return .dark }
         return light ? .light : .dark
     }
 }

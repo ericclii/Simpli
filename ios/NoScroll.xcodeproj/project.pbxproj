@@ -35,6 +35,7 @@
 		DC66C7088500AC1FB21DACFC /* ServiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9142C103B350A4F42060B98 /* ServiceSettingsView.swift */; };
 		E3D2C8740D06E02BD6ABD35D /* TabScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3625EA0C0613FDC22D64C5DC /* TabScreens.swift */; };
 		612BD7A42F9C28CDC50E4C64 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4FCEFD7F500E592911CF8C19 /* PrivacyInfo.xcprivacy */; };
+		55DD0245DB4E6F2A0B5502E8 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = DBCCDD33F88A9D2AFEF8A647 /* AppIcon.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		FBF257999FE8034997CE0C5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = NoScrollWidget/Info.plist; sourceTree = "<group>"; };
 		FE79E075B3369855BA9631CA /* Services.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Services.swift; path = NoScroll/App/Services.swift; sourceTree = "<group>"; };
 		4FCEFD7F500E592911CF8C19 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = NoScroll/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		DBCCDD33F88A9D2AFEF8A647 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; name = AppIcon.icon; path = NoScroll/AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 		307A90002D1285ED8C05A9E0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DBCCDD33F88A9D2AFEF8A647 /* AppIcon.icon */,
 				847708244D2F2364D2D98223 /* Assets.xcassets */,
 				4FCEFD7F500E592911CF8C19 /* PrivacyInfo.xcprivacy */,
 				D2E4B2A875DB71820FEEF62C /* noscroll.js */,
@@ -260,6 +263,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55DD0245DB4E6F2A0B5502E8 /* AppIcon.icon in Resources */,
 				8BBA0F12CFE98E6B7CEE26F4 /* Assets.xcassets in Resources */,
 				612BD7A42F9C28CDC50E4C64 /* PrivacyInfo.xcprivacy in Resources */,
 				0020A065EE1971D8D94E8A44 /* noscroll.js in Resources */,
